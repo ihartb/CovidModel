@@ -18,6 +18,7 @@ z : -7 to 7
   - [ ] initializing agents
     - [x] initializing a task list 
     - how to decide willDie?
+	- 425k cases --> 18k deaths = 4% death rate
     - how to decide infectionTime
     - how long will a single simulation run for?
     - collecting data
