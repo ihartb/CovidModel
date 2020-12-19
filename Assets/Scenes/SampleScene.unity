@@ -1595,6 +1595,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1837289245841946133, guid: a58ff1508ea804fcf90597a76208c45f,
+        type: 3}
+      propertyPath: curedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 19f667a5c9c264f4c9dc590aef0b4b2d, type: 2}
+    - target: {fileID: -1837289245841946133, guid: a58ff1508ea804fcf90597a76208c45f,
+        type: 3}
+      propertyPath: healthyMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c8dde3df57f684f19afb872e3430a492, type: 2}
+    - target: {fileID: -1837289245841946133, guid: a58ff1508ea804fcf90597a76208c45f,
+        type: 3}
+      propertyPath: infectedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c979b66dfe7a4782a6bdec4ffeaaa9f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a58ff1508ea804fcf90597a76208c45f, type: 3}
 --- !u!1 &1027030568 stripped
@@ -2088,6 +2103,7 @@ MonoBehaviour:
   maxX: 17
   maxZ: 7
   numAgents: 50
+  rooms: []
   percentInfected: 0
   percentDistancing: 0
   distancingMeasure: 0
