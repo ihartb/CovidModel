@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Healthy
   - Infected
+  - Cured
   layers:
   - Default
   - TransparentFX

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2081,6 +2081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HealthyMaterial: {fileID: 2100000, guid: c8dde3df57f684f19afb872e3430a492, type: 2}
   InfectedMaterial: {fileID: 2100000, guid: 8c979b66dfe7a4782a6bdec4ffeaaa9f, type: 2}
+  curedMaterial: {fileID: 2100000, guid: 19f667a5c9c264f4c9dc590aef0b4b2d, type: 2}
   agentPrefab: {fileID: 1027030568}
   locations: {fileID: 1873182636}
   agentParent: {fileID: 1205223712}

@@ -8,13 +8,14 @@ public class Simulation : MonoBehaviour
 
     public Material HealthyMaterial;
     public Material InfectedMaterial;
+    public Material curedMaterial;
     public GameObject agentPrefab;
     public GameObject locations;
     public GameObject agentParent;
     public float maxX;
     public float maxZ;
     public int numAgents;
-    private GameObject[] agents;
+    private List<GameObject> agents;
 
     //experiment variables
     public float percentInfected;
@@ -34,11 +35,11 @@ public class Simulation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        agents = new GameObject[numAgents];
+        agents = new List<GameObject>(new GameObject[numAgents]);
         for (int i = 0; i < numAgents; i++)
         {
             var randPos = new Vector3(Random.Range(-1f, 1f)*maxX, 1, Random.Range(-1f, 1f)*maxZ);
-  
+
             //instantiate game object
             GameObject agent = null;
             agent = Instantiate(agentPrefab, randPos, Quaternion.identity);
@@ -54,6 +55,8 @@ public class Simulation : MonoBehaviour
             agentScript.willDie = Random.Range(1, 100) <= 30; //30% will die LOLLLL
             agentScript.healthyMaterial = HealthyMaterial;
             agentScript.infectedMaterial = InfectedMaterial;
+            agentScript.curedMaterial = curedMaterial;
+            agentScript.infectionTimer = -1f;
 
             agents[i] = agent;
         }
@@ -66,7 +69,17 @@ public class Simulation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        for (int i = 0; i < numAgents; i++)
+        {
+            if (agents[i].tag == "Dead")
+            {
+                print("Removed " +agents[i].name);
+                agents[i].SetActive(false);
+                agents.RemoveAt(i);
+                i--;
+                numAgents--;
+            }
+        }
     }
 
     List<Agent.Tuple<Vector3, float>> createLocationList(Vector3 randPos) {
