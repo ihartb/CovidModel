@@ -10,7 +10,6 @@ z : -7 to 7
   - [x] on trigger enter
     - [x] not all trigger enters --> infection, calculate a percent that does.
     - [x] infection from particles in room
-    - [ ] infection rate increases based on proximity to sick? maybe
   - [x] model room particles
   - [ ] updating trigger radius based on distancing measure...?
   - [x] change color for infection
@@ -20,9 +19,13 @@ z : -7 to 7
   - [x] outside vs inside infection chance
 - [ ] simulation
   - [ ] variables
+    - [ ] mask
+    - [ ] enforce better social distancing
+    - [ ] ending simulation
+    - [ ] recording / displaying results
   - [x] initializing agents
 - collecting data
-  - [ ] results struct 
+  - [ ] results struct
   - [ ] displaying data
 - [x] interacting with system?
   - [x] UI buttons for variables

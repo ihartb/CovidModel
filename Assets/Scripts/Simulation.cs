@@ -97,7 +97,7 @@ public class Simulation : MonoBehaviour
         }
     }
 
-    // numbers suggested by https://www.sciencedirect.com/science/article/pii/S0925753520302630#e0030
+    // loosely based on numbers suggested by https://www.sciencedirect.com/science/article/pii/S0925753520302630#e0030
     void UpdateIndoorParticles()
     {
         for (int j = 1; j < 12; j++) // room number
@@ -112,7 +112,7 @@ public class Simulation : MonoBehaviour
                     rooms[j] += 500f*Time.deltaTime; // virus particles increase by this value
                 }
             }
-            rooms[j] -= 1f/360f*Time.deltaTime; // virus particles die over time according to this value (about 3 hours halflife translated to deltatime)
+            rooms[j] -= 400f*Time.deltaTime; // virus particles die over time according to this value (about 3 hours halflife translated to deltatime)
             rooms[j] = Mathf.Max(rooms[j],0f);
         }
     }
@@ -138,12 +138,6 @@ public class Simulation : MonoBehaviour
             //set script variables
             Agent agentScript = agent.GetComponent<Agent>();
 
-            if (i == 0)
-            {
-                agent.tag = "Infected";
-                agent.GetComponent<MeshRenderer>().material = InfectedMaterial;
-                agentScript.infectionTimer = agentScript.infectionDuration;
-            }
 
             createLocationList(i, agent, percentInfected == 1f/50f);
             agentScript.infectionDuration = 14f;
@@ -153,7 +147,13 @@ public class Simulation : MonoBehaviour
             agentScript.infectionTimer = -1f;
             agentScript.rooms = rooms;
 
-            
+            if (i == 0)
+            {
+                agent.tag = "Infected";
+                agent.GetComponent<MeshRenderer>().material = InfectedMaterial;
+                agentScript.infectionTimer = agentScript.infectionDuration;
+            }
+
             agents[i] = agent;
         }
 
@@ -186,11 +186,12 @@ public class Simulation : MonoBehaviour
                 maxDur = 10f;
             }
         }
-        
+
         int len = Random.Range(1, maxLoc);
         List<Tuple<Vector3, float>> res = new List<Tuple<Vector3, float>>();
         if (agentScript.locationList != null)
         {
+            agentScript.currLocation = 0;
             Tuple<Vector3, float> curr = agentScript.locationList[agentScript.currLocation];
             res.Add(new Tuple<Vector3, float>(curr.Item1, Random.Range(minDur, maxDur)));
 

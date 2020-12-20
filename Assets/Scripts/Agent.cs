@@ -97,10 +97,17 @@ public class Agent : MonoBehaviour
             if (room != 0)
             {
                 // need to divide by a constant to normalize this to correct units
-                float tcritical = 5000f* Mathf.Exp(-.05f*rooms[room] / GetRoomArea(transform));
+                float tcritical = 500f* Mathf.Exp(-.2f*rooms[room] / GetRoomArea(transform));
                 if (timeInRoom > tcritical)
                 {
-                    InfectAgent();
+                    if (Random.Range(1f,1000f) <= infectionRate * 1000)
+                    {
+                        InfectAgent();
+                    }
+                    else
+                    {
+                        timeInRoom = 0;
+                    }
                 }
             }
             //
