@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using static Agent;
 
 public class Simulation : MonoBehaviour
@@ -20,15 +22,25 @@ public class Simulation : MonoBehaviour
     public List<Tuple<Vector2, Vector2>> roomDimensions;
     public float[] rooms;
     public bool start = false;
-    //experiment variables
-    public float percentInfected;
-        //percent of population infected at which
-        //protective measures implemented(5\%,15\%,25\%,50\%)
-    public float percentDistancing;
-        //percent of population that
-        //follows safety measures (0\%, 10\%, 25\%, 70\%, 100\%)
     public ProtectiveMeasure distancingMeasure;
-        //level of protective measures which affect infection rate
+    public float percentDistancing;
+    List<int> percentDistancingList;
+    public float percentInfected;
+    List<int> percentInfectedList;
+
+    public int distMeasure;
+    public int percDist;
+    public int percInf;
+    public int simNum;
+    public Results simResults;
+    private Stopwatch stopWatch;
+
+    public Dropdown percentInfectedMenu;
+    public Dropdown percentDistancingMenu;
+    public Dropdown levelProtectionMenu;
+    public Button startButton;
+    public Text resultsText;
+
     public enum ProtectiveMeasure
     {
         NONE,
@@ -38,15 +50,50 @@ public class Simulation : MonoBehaviour
 
     public class Results
     {
-        public float time; //time it takes for all infections to be gone
-        public int numDeaths; //number of deaths during that time
+        public long totalTime; //time it takes for all infections to be gone
+        public float numDeaths; //number of deaths during that time
+        public float totalRuns;
 
-        public Results(float time, int numDeaths)
+        public Results()
         {
-            this.time = time;
-            this.numDeaths = numDeaths;
+            this.totalTime = 0;
+            this.numDeaths = 0;
+            this.totalRuns = 0;
+        }
+
+        public void reset()
+        {
+            this.totalTime = 0;
+            this.numDeaths = 0;
+            this.totalRuns = 0;
+        }
+
+        public void setVals(long timeElapsed, float numDeaths)
+        {
+            ++totalRuns;
+            this.totalTime += timeElapsed;
+            this.numDeaths += numDeaths;
+
+            //if (totalRuns == 20)
+            //{
+            //    this.totalTime /= 20;
+            //    this.numDeaths /= 20;
+
+            //    WriteToFile(this.toString());
+            //    reset();
+
+            //}
+        }
+
+        public string toString()
+        {
+            string p4 = "" + this.numDeaths + ", ";
+            string p5 = "" + this.totalTime + "\n";
+
+            return p4 + p5 + "\n";
         }
     }
+
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +113,38 @@ public class Simulation : MonoBehaviour
         roomDimensions.Add(new Tuple<Vector2, Vector2>(new Vector2(5.8f, 4.7f), new Vector2(10.4f, 7f)));
         roomDimensions.Add(new Tuple<Vector2, Vector2>(new Vector2(12.9f, 2.8f), new Vector2(17f, 7f)));
         roomDimensions.Add(new Tuple<Vector2, Vector2>(new Vector2(12.9f, -7f), new Vector2(17f, .8f)));
+
+        percentDistancingList = new List<int>();
+        percentDistancingList.Add(100);
+        percentDistancingList.Add(90);
+        percentDistancingList.Add(80);
+        percentDistancingList.Add(74);
+        percentDistancingList.Add(50);
+        percentDistancingList.Add(24);
+        percentDistancingList.Add(0);
+
+        percentInfectedList = new List<int>();
+        percentInfectedList.Add(2);
+        percentInfectedList.Add(6);
+        percentInfectedList.Add(10);
+        percentInfectedList.Add(16);
+        percentInfectedList.Add(20);
+        percentInfectedList.Add(30);
+
+        stopWatch = new Stopwatch();
+        simResults = new Results();
+        agents = new List<GameObject>(new GameObject[numAgents]);
+
+        distMeasure = -1;
+        percDist = -1;
+        percInf = -1;
+        simNum = -1;
+        string p1 = "Distancing measure, ";
+        string p2 = "Percent Distancing, ";
+        string p3 = "Percent Infected, ";
+        string p4 = "Num Dead, ";
+        string p5 = "Time to eradicate \n\n";
+        WriteToFile(p1 + p2 + p3 + p4 + p5);
     }
 
     // Update is called once per frame
@@ -96,6 +175,31 @@ public class Simulation : MonoBehaviour
                     i++;
                 }
             }
+
+            if (GameObject.FindGameObjectsWithTag("Infected").Length == 0)
+            {
+                stopWatch.Stop();
+                simResults.setVals(stopWatch.ElapsedMilliseconds, 50 - numAgents);
+
+                WriteToFile(simResults.toString());
+                simResults.reset();
+
+                for (int i = 0; i < numAgents; i++)
+                {
+                    Destroy(agents[i]);
+                }
+
+                foreach (var dead in GameObject.FindGameObjectsWithTag("Dead"))
+                {
+                    Destroy(dead);
+                }
+
+                start = false;
+                startButton.interactable = true;
+                percentInfectedMenu.interactable = true;
+                percentDistancingMenu.interactable = true;
+                levelProtectionMenu.interactable = true;
+            }
         }
     }
 
@@ -121,9 +225,13 @@ public class Simulation : MonoBehaviour
 
     public void startSimulation()
     {
+        start = false;
         rooms = new float[12];
         for (int j = 0; j < 12; j++) rooms[j] = 0;
+        numAgents = 50;
         agents = new List<GameObject>(new GameObject[numAgents]);
+        incrSetParams();
+        stopWatch.Start();
 
         for (int i = 0; i < numAgents; i++)
         {
@@ -174,6 +282,52 @@ public class Simulation : MonoBehaviour
 
 
         start = true;
+    }
+
+    public void incrSetParams()
+    {
+        //simNum = (simNum + 1) % 20;
+        //if (simNum == 0)
+        //{
+        //    percInf = (percInf + 1) % percentInfectedList.Count;
+        //    if (percInf == 0)
+        //    {
+        //        percDist = (percDist + 1) % percentDistancingList.Count;
+
+        //        if (percDist == 0)
+        //        {
+        //            distMeasure = (distMeasure + 1);
+        //            if (distMeasure == 3)
+        //            {
+        //                //stop the gameplay
+        //            }
+        //        }
+
+        //    }
+        //}
+
+        //distancingMeasure = (ProtectiveMeasure)distMeasure;
+        //percentDistancing = percentDistancingList[percDist] / 100f;
+        //percentInfected = percentInfectedList[percInf] / 100f;
+
+        string p1 = distancingMeasure.ToString() + ", ";
+        string p2 = "" + percentDistancing + ", ";
+        string p3 = "" + percentInfected + ", ";
+        WriteToFile(p1 + p2 + p3);
+    }
+
+    public void WriteToFile(string res)
+    {
+        //using (System.IO.StreamWriter file =
+        //new System.IO.StreamWriter(@"/Users/bhartimehta/Desktop/CovidModelData.txt", true))
+        //{
+
+        //    file.WriteLine(res);
+        //}
+
+        string curr = resultsText.text + res;
+        resultsText.text = curr;
+
     }
 
     void createLocationList(int agentIndex, GameObject agent, bool isDistancing)
