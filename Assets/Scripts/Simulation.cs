@@ -51,6 +51,8 @@ public class Simulation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        percentDistancing = 1f;
+        percentInfected = .02f;
         roomDimensions = new List<Tuple<Vector2, Vector2>>();
         roomDimensions.Add(new Tuple<Vector2, Vector2>(new Vector2(0f, 0f), new Vector2(0f, 0f)));
         roomDimensions.Add(new Tuple<Vector2, Vector2>(new Vector2(-17f, -7f), new Vector2(-11.9f, -3f)));
@@ -137,8 +139,6 @@ public class Simulation : MonoBehaviour
 
             //set script variables
             Agent agentScript = agent.GetComponent<Agent>();
-
-
             createLocationList(i, agent, percentInfected == 1f/50f);
             agentScript.infectionDuration = 14f;
             agentScript.healthyMaterial = HealthyMaterial;
@@ -146,12 +146,27 @@ public class Simulation : MonoBehaviour
             agentScript.curedMaterial = curedMaterial;
             agentScript.infectionTimer = -1f;
             agentScript.rooms = rooms;
+            agentScript.maskMult = 1f;
+            agentScript.SDMult = 1f;
 
-            if (i == 0)
+            if (i <= percentInfected * numAgents)
             {
                 agent.tag = "Infected";
                 agent.GetComponent<MeshRenderer>().material = InfectedMaterial;
                 agentScript.infectionTimer = agentScript.infectionDuration;
+            }
+            // which agents are following distancing if any
+            print(percentDistancing);
+            print(percentInfected);
+            if (i <= percentDistancing * numAgents)
+            {
+
+                if (distancingMeasure == ProtectiveMeasure.LIGHT) agentScript.SDMult = 1.5f;
+                else if (distancingMeasure == ProtectiveMeasure.STRICT)
+                {
+                    agentScript.maskMult = 3f;
+                    agentScript.SDMult = 4.0f;
+                }
             }
 
             agents[i] = agent;

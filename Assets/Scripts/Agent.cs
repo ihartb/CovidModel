@@ -45,6 +45,11 @@ public class Agent : MonoBehaviour
 
     private int currRoom;
     private float timeInRoom;
+    private float timeNearDisease;
+    private int nearAgents;
+
+    public float maskMult;  // has value when wearing a mask
+    public float SDMult;    // has value when social distancing
 
     void Start()
     {
@@ -55,10 +60,13 @@ public class Agent : MonoBehaviour
         meshR = GetComponent<MeshRenderer>();
         currRoom = GetRoom(transform);
         timeInRoom = 0f;
+        timeNearDisease = 0f;
+        nearAgents = 0;
     }
 
     void Update()
     {
+        if (nearAgents == 0f) timeNearDisease = 0f;
         if (infectionTimer > 0.0f) infectionTimer = Mathf.Max(0.0f, infectionTimer - Time.deltaTime);
         if (immunityTimer > 0.0f) immunityTimer = Mathf.Max(0.0f, immunityTimer - Time.deltaTime);
         if (infectionTimer == 0f) {
@@ -97,7 +105,7 @@ public class Agent : MonoBehaviour
             if (room != 0)
             {
                 // need to divide by a constant to normalize this to correct units
-                float tcritical = 500f* Mathf.Exp(-.2f*rooms[room] / GetRoomArea(transform));
+                float tcritical = 500f* Mathf.Exp(-.2f*rooms[room] / GetRoomArea(transform))*maskMult;
                 if (timeInRoom > tcritical)
                 {
                     if (Random.Range(1f,1000f) <= infectionRate * 1000)
@@ -125,18 +133,45 @@ public class Agent : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Infected") &&
-            gameObject.tag == "Healthy" &&
-            Random.Range(1f,1000f) <= infectionRate * 1000)
+            gameObject.tag == "Healthy")
+            // Random.Range(1f,1000f) <= infectionRate * 1000)
         {
             if (GetRoom(transform) == GetRoom(other.transform))
             {
-                InfectAgent();
+                nearAgents++;
+                // InfectAgent();
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Infected") &&
+            gameObject.tag == "Healthy")
+            // Random.Range(1f,1000f) <= infectionRate * 1000)
+        {
+            nearAgents--;
+            if (nearAgents < 0) nearAgents = 0;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Infected") &&
+        gameObject.tag == "Healthy")
+        {
+            if (GetRoom(transform) == GetRoom(other.transform))
+            {
+                timeNearDisease += Time.deltaTime;
+                if (timeNearDisease >= Random.Range(3f*maskMult*SDMult,20f*maskMult*SDMult)) InfectAgent();
             }
         }
     }
 
     private void InfectAgent()
     {
+        print(maskMult);
         gameObject.tag = "Infected";
         infectionTimer = infectionDuration;
         meshR.material = infectedMaterial;

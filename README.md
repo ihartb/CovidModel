@@ -11,7 +11,7 @@ z : -7 to 7
     - [x] not all trigger enters --> infection, calculate a percent that does.
     - [x] infection from particles in room
   - [x] model room particles
-  - [ ] updating trigger radius based on distancing measure...?
+  - [x] updating trigger radius based on distancing measure...?
   - [x] change color for infection
   - [x] time limit for infection
   - [x] cured agent tag and material
@@ -19,8 +19,8 @@ z : -7 to 7
   - [x] outside vs inside infection chance
 - [ ] simulation
   - [ ] variables
-    - [ ] mask
-    - [ ] enforce better social distancing
+    - [x] mask
+    - [x] enforce better social distancing
     - [ ] ending simulation
     - [ ] recording / displaying results
   - [x] initializing agents
