@@ -16,10 +16,7 @@ public class Agent : MonoBehaviour
     public float infectionRate = .3f;
     private float deathCountdown = 14f + 2f;
     private float immunityTimer = -1f;
-        //set how long this guy will stay infected for based on Simulation class
-        //probabilities
-    public bool willDie;
-        //will this person die if infected
+
     public Material healthyMaterial;
     public Material infectedMaterial;
     public Material curedMaterial;
@@ -27,13 +24,8 @@ public class Agent : MonoBehaviour
 
     //UPDATING VARIABLES
     public int currLocation;
-        //location index in locationTimeList
     public float timeAtLoc;
-        //float time remaining at location
     public float infectionTimer = -1f;
-        //bool not needed bc timer > 0 ? infected : healthy
-        //and set gameObject.tag to "Infected" on infection
-        //gameObject.tag to "Healthy" on healthy
     private NavMeshAgent navMAgent;
     public MeshRenderer meshR;
 
@@ -151,23 +143,24 @@ public class Agent : MonoBehaviour
         }
     }
 
-    private int GetRoom(Transform t)
-    {
-        float x = t.position[0];
-        float y = t.position[2];
-        if (x < -10.95 && y < -2.47) return 1;
-        else if (x < -10.95 && y > -2.47 && y < 2.25) return 2;
-        else if (x < -10.95 && y > 2.25) return 3;
-        else if (x > -8.27 && x < -1.45 && y > 4) return 4;
-        else if (x > -8.27 && x < -1.45 && y < 4 && y > 0.4) return 5;
-        else if (x > -5.56 && x < -.98 && y < -3.72 && y > -8.5) return 6;
-        else if (x > -.98 && x < 4.5 && y < -3.59 && y > -8.5) return 7;
-        else if (x > 4.5 && x < 11.14 && y < -.79 && y > -8.5) return 8;
-        else if (x > 5.21 && x < 11.14 && y < 8.5 && y > 3.66) return 9;
-        else if (x > 11.14 && x < 19 && y < 1.65 && y > -8.5) return 10;
-        else if (x > 11.14 && x < 19 && y < 8.5 && y > 1.65) return 11;
-        else return 0; // outside corridors
-    }
+    //private int GetRoom(Transform t)
+    //{
+    //    float x = t.position[0];
+    //    float y = t.position[2];
+    //    if (x < -10.95 && y < -2.47) return 1;
+    //    else if (x < -10.95 && y > -2.47 && y < 2.25) return 2;
+    //    else if (x < -10.95 && y > 2.25) return 3;
+    //    else if (x > -8.27 && x < -1.45 && y > 4) return 4;
+    //    else if (x > -8.27 && x < -1.45 && y < 4 && y > 0.4) return 5;
+    //    else if (x > -5.56 && x < -.98 && y < -3.72 && y > -8.5) return 6;
+    //    else if (x > -.98 && x < 4.5 && y < -3.59 && y > -8.5) return 7;
+    //    else if (x > 4.5 && x < 11.14 && y < -.79 && y > -8.5) return 8;
+    //    else if (x > 5.21 && x < 11.14 && y < 8.5 && y > 3.66) return 9;
+    //    else if (x > 11.14 && x < 19 && y < 1.65 && y > -8.5) return 10;
+    //    else if (x > 11.14 && x < 19 && y < 8.5 && y > 1.65) return 11;
+    //    else return 0; // outside corridors
+    //}
+
     private float GetRoomArea(Transform t)
     {
         float x = t.position[0];

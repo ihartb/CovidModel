@@ -27,8 +27,8 @@ z : -7 to 7
     - how to decide infectionTime
     - how long will a single simulation run for?
     - collecting data
-- [ ] interacting with system?
-  - UI buttons for variables
-  - UI  show results
-  - display results
+- [x] interacting with system?
+  - [x] UI buttons for variables
+  - [x] UI  show results
+- [ ] display results
 - [ ] 2-4 minute video demo
