@@ -12,7 +12,7 @@ z : -7 to 7
     - [x] infection from particles in room
     - [ ] infection rate increases based on proximity to sick? maybe
   - [x] model room particles
-  - [ ] updating trigger radius based on distancing measure
+  - [ ] updating trigger radius based on distancing measure...?
   - [x] change color for infection
   - [x] time limit for infection
   - [x] cured agent tag and material
@@ -20,15 +20,13 @@ z : -7 to 7
   - [x] outside vs inside infection chance
 - [ ] simulation
   - [ ] variables
-  - [ ] initializing agents
-    - [x] initializing a task list
-    - how to decide willDie?
-	- 425k cases --> 18k deaths = 4% death rate
-    - how to decide infectionTime
-    - how long will a single simulation run for?
-    - collecting data
+  - [x] initializing agents
+- collecting data
+  - [ ] results struct 
+  - [ ] displaying data
 - [x] interacting with system?
   - [x] UI buttons for variables
   - [x] UI  show results
+  - [x] UI interacts with simulation
 - [ ] display results
 - [ ] 2-4 minute video demo
