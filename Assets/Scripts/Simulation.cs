@@ -184,15 +184,15 @@ public class Simulation : MonoBehaviour
                 WriteToFile(simResults.toString());
                 simResults.reset();
 
-                for (int i = 0; i < numAgents; i++)
-                {
-                    Destroy(agents[i]);
-                }
-
-                foreach (var dead in GameObject.FindGameObjectsWithTag("Dead"))
-                {
-                    Destroy(dead);
-                }
+                // for (int i = 0; i < numAgents; i++)
+                // {
+                //     Destroy(agents[i]);
+                // }
+                //
+                // foreach (var dead in GameObject.FindGameObjectsWithTag("Dead"))
+                // {
+                //     Destroy(dead);
+                // }
 
                 start = false;
                 startButton.interactable = true;
@@ -225,13 +225,22 @@ public class Simulation : MonoBehaviour
 
     public void startSimulation()
     {
+        for (int i = 0; i < numAgents; i++)
+        {
+            Destroy(agents[i]);
+        }
+
+        foreach (var dead in GameObject.FindGameObjectsWithTag("Dead"))
+        {
+            Destroy(dead);
+        }
         start = false;
         rooms = new float[12];
         for (int j = 0; j < 12; j++) rooms[j] = 0;
         numAgents = 50;
         agents = new List<GameObject>(new GameObject[numAgents]);
         incrSetParams();
-        stopWatch.Start();
+        stopWatch.Restart();
 
         for (int i = 0; i < numAgents; i++)
         {
